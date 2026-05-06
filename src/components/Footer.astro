@@ -1,0 +1,58 @@
+---
+import { useTranslations, routeFor, type Lang } from '@i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 bg-jungle-900 text-jungle-50">
+  <div class="container-narrow py-16 grid gap-10 md:grid-cols-4">
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg leading-none">S</span>
+        <span class="font-display text-xl tracking-tight text-white">SurinameTravels</span>
+      </div>
+      <h2 class="font-display text-lg text-white mb-2">{t('footer.about')}</h2>
+      <p class="text-sm text-jungle-100/90 max-w-md">{t('footer.aboutBody')}</p>
+    </div>
+
+    <div>
+      <h2 class="font-display text-lg text-white mb-3">{t('footer.links')}</h2>
+      <ul class="space-y-2 text-sm">
+        <li><a href={routeFor(lang, 'home')} class="text-jungle-100 hover:text-white">{t('nav.home')}</a></li>
+        <li><a href={routeFor(lang, 'blog')} class="text-jungle-100 hover:text-white">{t('nav.blog')}</a></li>
+        <li><a href={routeFor(lang, 'services')} class="text-jungle-100 hover:text-white">{t('nav.services')}</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="font-display text-lg text-white mb-3">{t('footer.subscribe')}</h2>
+      <p class="text-sm text-jungle-100/90 mb-3">{t('footer.subscribeBody')}</p>
+      <form action="https://formspree.io/f/your-id" method="POST" class="flex gap-2">
+        <label class="sr-only" for="newsletter-email">Email</label>
+        <input
+          id="newsletter-email"
+          type="email"
+          name="email"
+          required
+          placeholder={t('footer.subscribePlaceholder')}
+          class="flex-1 min-w-0 px-3 py-2 rounded-full bg-white text-ink placeholder:text-ink-soft/60 text-sm border border-jungle-700"
+        />
+        <button type="submit" class="btn-primary text-sm" style="padding: 0.5rem 1.25rem;">
+          {t('footer.subscribeButton')}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="border-t border-jungle-700">
+    <div class="container-narrow py-5 flex flex-col md:flex-row gap-2 md:items-center md:justify-between text-xs text-jungle-100/70">
+      <p>{t('footer.copyright', { year })}</p>
+      <p>Made with care in the Surinamese diaspora.</p>
+    </div>
+  </div>
+</footer>

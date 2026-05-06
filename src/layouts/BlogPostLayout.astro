@@ -1,0 +1,209 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import FAQ from '@components/FAQ.astro';
+import PostCard from '@components/PostCard.astro';
+import { useTranslations, formatDate, routeFor, type Lang } from '@i18n/utils';
+
+interface RelatedPost {
+  slug: string;
+  title: string;
+  description: string;
+  publishDate: Date;
+  heroImage: string;
+  heroAlt: string;
+  category: string;
+  tags: string[];
+  readingMinutes: number;
+}
+
+interface TocItem {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  publishDate: Date;
+  updatedDate?: Date;
+  author: string;
+  heroImage: string;
+  heroAlt: string;
+  category: string;
+  tags: string[];
+  readingMinutes: number;
+  faqs?: Array<{ q: string; a: string }>;
+  toc?: TocItem[];
+  related?: RelatedPost[];
+  canonical: string;
+  alternateUrl?: string;
+  alternateLang?: Lang;
+  slug: string;
+}
+
+const {
+  title,
+  description,
+  lang,
+  publishDate,
+  updatedDate,
+  author,
+  heroImage,
+  heroAlt,
+  category,
+  tags,
+  readingMinutes,
+  faqs,
+  toc = [],
+  related = [],
+  canonical,
+  alternateUrl,
+  alternateLang,
+  slug,
+} = Astro.props;
+
+const t = useTranslations(lang);
+
+const alternates = alternateUrl && alternateLang
+  ? [{ lang, href: canonical }, { lang: alternateLang, href: alternateUrl }]
+  : undefined;
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://surinametravels.com';
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: publishDate.toISOString(),
+  dateModified: (updatedDate ?? publishDate).toISOString(),
+  author: { '@type': 'Person', name: author },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Suriname Travels',
+    logo: { '@type': 'ImageObject', url: `${site}/og/logo.png` },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `${site}${canonical}` },
+  image: heroImage,
+  keywords: tags.join(', '),
+  inLanguage: lang === 'nl' ? 'nl-NL' : 'en-US',
+};
+
+const blogBase = routeFor(lang, 'blog');
+const breadcrumbs = [
+  { label: t('nav.home'), href: routeFor(lang, 'home') },
+  { label: t('nav.blog'), href: blogBase },
+  { label: title },
+];
+
+const h2Items = toc.filter((i) => i.depth === 2);
+---
+
+<BaseLayout
+  title={`${title} — Suriname Travels`}
+  description={description}
+  lang={lang}
+  canonical={canonical}
+  ogType="article"
+  alternates={alternates}
+  publishedTime={publishDate}
+  modifiedTime={updatedDate}
+  author={author}
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+
+  <article class="pb-16">
+    <header class="container-narrow pt-8 md:pt-12">
+      <Breadcrumbs items={breadcrumbs} />
+      <div class="mt-6 max-w-3xl">
+        <span class="pill mb-4">{category}</span>
+        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl text-ink leading-[1.05]">{title}</h1>
+        <p class="mt-5 text-lg text-ink-soft">{description}</p>
+
+        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-soft">
+          <span class="inline-flex items-center gap-2">
+            <span class="inline-flex w-8 h-8 rounded-full bg-jungle-700 text-white items-center justify-center font-display text-sm">
+              {author.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+            </span>
+            <span><span class="text-ink-soft">{t('blog.by')}</span> <strong class="text-ink font-medium">{author}</strong></span>
+          </span>
+          <time datetime={publishDate.toISOString()}>
+            <span class="text-ink-soft">{t('blog.publishedOn')}</span> {formatDate(publishDate, lang)}
+          </time>
+          {updatedDate && (
+            <time datetime={updatedDate.toISOString()}>
+              <span class="text-ink-soft">·</span> {t('blog.updatedOn')} {formatDate(updatedDate, lang)}
+            </time>
+          )}
+          <span>· {readingMinutes} {t('blog.minRead')}</span>
+        </div>
+      </div>
+    </header>
+
+    <figure class="container-narrow mt-10">
+      <img
+        src={heroImage}
+        alt={heroAlt}
+        width="1600"
+        height="900"
+        class="w-full aspect-[16/9] object-cover rounded-3xl shadow-card"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </figure>
+
+    <div class="container-narrow mt-12 grid gap-10 lg:grid-cols-[15rem_1fr]">
+      {h2Items.length > 0 && (
+        <aside class="lg:sticky lg:top-24 self-start">
+          <nav aria-label={t('blog.toc')} class="rounded-2xl border border-mist bg-white p-5">
+            <h2 class="font-display text-sm uppercase tracking-wider text-ink-soft mb-3">{t('blog.toc')}</h2>
+            <ol class="space-y-2 text-sm">
+              {
+                h2Items.map((item) => (
+                  <li>
+                    <a href={`#${item.slug}`} class="text-ink-soft hover:text-jungle-700 line-clamp-2 no-underline">
+                      {item.text}
+                    </a>
+                  </li>
+                ))
+              }
+            </ol>
+          </nav>
+        </aside>
+      )}
+
+      <div class="prose-jungle max-w-none container-prose lg:container-prose-none lg:px-0">
+        <slot />
+
+        <div class="not-prose mt-10 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span class="pill bg-mist text-ink-soft">#{tag}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {faqs && faqs.length > 0 && <FAQ title={t('faq.title')} faqs={faqs} />}
+
+    {related.length > 0 && (
+      <section class="container-narrow mt-12">
+        <h2 class="font-display text-3xl md:text-4xl text-ink mb-8">{t('blog.related')}</h2>
+        <div class="grid gap-6 md:grid-cols-3">
+          {related.map((post) => <PostCard post={post} lang={lang} />)}
+        </div>
+      </section>
+    )}
+
+    <div class="container-narrow mt-12 text-center">
+      <a href={blogBase} class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+        {t('blog.backToBlog')}
+      </a>
+    </div>
+  </article>
+</BaseLayout>

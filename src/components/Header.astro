@@ -1,0 +1,90 @@
+---
+import { useTranslations, routeFor, type Lang } from '@i18n/utils';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  lang: Lang;
+  alternateUrl?: string;
+}
+
+const { lang, alternateUrl } = Astro.props;
+const t = useTranslations(lang);
+
+const navItems = [
+  { label: t('nav.home'), href: routeFor(lang, 'home') },
+  { label: t('nav.blog'), href: routeFor(lang, 'blog') },
+  { label: t('nav.services'), href: routeFor(lang, 'services') },
+];
+
+const currentPath = Astro.url.pathname;
+function isActive(href: string) {
+  if (href === routeFor(lang, 'home')) return currentPath === href;
+  return currentPath.startsWith(href);
+}
+---
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-white focus:p-2 focus:rounded">
+  {t('a11y.skipToContent')}
+</a>
+
+<header class="sticky top-0 z-40 backdrop-blur bg-sand/85 border-b border-mist">
+  <div class="container-narrow flex items-center justify-between py-4">
+    <a href={routeFor(lang, 'home')} class="flex items-center gap-2 group" aria-label="Suriname Travels — home">
+      <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-jungle-700 text-white font-display text-lg leading-none">S</span>
+      <span class="font-display text-xl tracking-tight text-ink">Suriname<span class="text-leaf-600">Travels</span></span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1" aria-label="Primary">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class={`px-3 py-2 rounded-full text-sm font-medium transition ${
+              isActive(item.href)
+                ? 'bg-jungle-50 text-jungle-700'
+                : 'text-ink-soft hover:text-jungle-700 hover:bg-jungle-50/60'
+            }`}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <LanguageSwitcher lang={lang} alternateUrl={alternateUrl} />
+      <a href={routeFor(lang, 'services')} class="hidden md:inline-flex btn-primary text-sm" style="padding: 0.625rem 1.25rem;">
+        {t('hero.cta.secondary')}
+      </a>
+      <button id="nav-toggle" class="md:hidden p-2 rounded-full hover:bg-jungle-50" aria-label={t('a11y.menu')} aria-expanded="false" aria-controls="mobile-nav">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-nav" class="md:hidden hidden border-t border-mist bg-white" aria-label="Mobile">
+    <div class="container-narrow py-3 flex flex-col gap-1">
+      {
+        navItems.map((item) => (
+          <a href={item.href} class="px-3 py-2.5 rounded-lg hover:bg-jungle-50 text-ink">
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('mobile-nav');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+</script>

@@ -1,0 +1,31 @@
+---
+interface Props {
+  type?: 'tip' | 'info' | 'warn';
+  title?: string;
+}
+const { type = 'info', title } = Astro.props;
+
+const styles: Record<string, string> = {
+  tip:  'bg-leaf-500/15 border-leaf-500 text-jungle-900',
+  info: 'bg-jungle-50 border-jungle-200 text-jungle-900',
+  warn: 'bg-sun-300/30 border-sun-500 text-ink',
+};
+
+const icons: Record<string, string> = {
+  tip: 'M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z',
+  info: 'M12 8v4M12 16h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z',
+  warn: 'M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z',
+};
+---
+
+<aside class={`my-6 rounded-2xl border-l-4 px-5 py-4 ${styles[type]}`}>
+  <div class="flex gap-3">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 mt-0.5" aria-hidden="true">
+      <path d={icons[type]} />
+    </svg>
+    <div class="flex-1 [&_p]:my-0">
+      {title && <strong class="block font-display text-base mb-1">{title}</strong>}
+      <slot />
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,94 @@
+---
+import '@styles/global.css';
+import SEO from '@components/SEO.astro';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import { htmlLang, type Lang } from '@i18n/utils';
+
+interface AlternateLink {
+  lang: Lang;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  canonical: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  alternates?: AlternateLink[];
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  author?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  lang,
+  canonical,
+  ogImage,
+  ogType,
+  alternates,
+  publishedTime,
+  modifiedTime,
+  author,
+  noindex,
+} = Astro.props;
+
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Suriname Travels',
+  url: Astro.site?.toString() ?? 'https://surinametravels.com',
+  logo: `${Astro.site?.toString().replace(/\/$/, '') ?? 'https://surinametravels.com'}/og/logo.png`,
+  sameAs: [],
+};
+
+const alternateUrl = alternates?.find((a) => a.lang !== lang)?.href;
+---
+
+<!doctype html>
+<html lang={htmlLang(lang)}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1F4D2E" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+    />
+
+    <SEO
+      title={title}
+      description={description}
+      lang={lang}
+      canonical={canonical}
+      ogImage={ogImage}
+      ogType={ogType}
+      alternates={alternates}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      author={author}
+      noindex={noindex}
+    />
+
+    <meta name="generator" content={Astro.generator} />
+    <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header lang={lang} alternateUrl={alternateUrl} />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

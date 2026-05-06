@@ -1,0 +1,149 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import PartnerCard from '@components/PartnerCard.astro';
+import FAQ from '@components/FAQ.astro';
+import { useTranslations, routeFor, type Lang } from '@i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const partners = [
+  {
+    title: t('services.partners.flights.title'),
+    body: t('services.partners.flights.body'),
+    cta: t('services.partners.flights.cta'),
+    href: 'https://www.skyscanner.net/transport/flights-to/pbm/',
+    partner: 'Skyscanner',
+    iconPath: 'M2 12l20-9-9 20-2-9-9-2z',
+  },
+  {
+    title: t('services.partners.stays.title'),
+    body: t('services.partners.stays.body'),
+    cta: t('services.partners.stays.cta'),
+    href: 'https://www.booking.com/country/sr.html',
+    partner: 'Booking.com',
+    iconPath: 'M3 21V8l9-5 9 5v13M9 21v-7h6v7',
+  },
+  {
+    title: t('services.partners.tours.title'),
+    body: t('services.partners.tours.body'),
+    cta: t('services.partners.tours.cta'),
+    href: 'https://www.getyourguide.com/-l210570/',
+    partner: 'GetYourGuide',
+    iconPath: 'M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0zM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  },
+  {
+    title: t('services.partners.insurance.title'),
+    body: t('services.partners.insurance.body'),
+    cta: t('services.partners.insurance.cta'),
+    href: 'https://www.worldnomads.com/',
+    partner: 'World Nomads',
+    iconPath: 'M12 22s-8-4.5-8-12a8 8 0 0 1 16 0c0 7.5-8 12-8 12zM9 11l2 2 4-4',
+  },
+  {
+    title: t('services.partners.car.title'),
+    body: t('services.partners.car.body'),
+    cta: t('services.partners.car.cta'),
+    href: 'https://www.rentalcars.com/',
+    partner: 'Rentalcars',
+    iconPath: 'M5 17H3a1 1 0 0 1-1-1v-3l2-5a2 2 0 0 1 2-1h12a2 2 0 0 1 2 1l2 5v3a1 1 0 0 1-1 1h-2M5 17a2 2 0 1 0 4 0M15 17a2 2 0 1 0 4 0',
+  },
+];
+
+const servicesFaqs =
+  lang === 'nl'
+    ? [
+        { q: 'Verdienen jullie iets aan mijn boeking?', a: 'Ja, een kleine commissie van de aanbieder als je via onze affiliate-links boekt. Jij betaalt zelf nooit meer.' },
+        { q: 'Waarom werken jullie met deze partners?', a: 'Wij gebruiken zelf alleen partners die wij zouden inzetten op onze eigen reis. Daarom staan grote agregators op deze site, plus een aantal lokale Surinaamse aanbieders waar mogelijk.' },
+        { q: 'Kan ik ook bij jullie boeken?', a: 'Wij verkopen geen reizen. Wij geven informatie en verwijzen naar partners. Vragen mag wel — mail ons gerust voor maatwerk-tips.' },
+        { q: 'Wat als er iets misgaat met mijn boeking?', a: 'De partner is verantwoordelijk voor de boeking. Wij kunnen wel meedenken — stuur een bericht en we proberen je verder te helpen.' },
+      ]
+    : [
+        { q: 'Do you earn from my booking?', a: 'Yes, a small commission from the provider when you book through our affiliate links. You never pay more yourself.' },
+        { q: 'Why these specific partners?', a: 'We only use partners we\'d use on our own trip. So large aggregators feature on this site, plus local Surinamese operators where possible.' },
+        { q: 'Can I book directly with you?', a: 'We don\'t sell trips. We share information and link to partners. Questions are fine though — message us for tailored tips.' },
+        { q: 'What if something goes wrong with my booking?', a: 'The partner is responsible for the booking. We\'re happy to think along — drop us a message and we\'ll try to help.' },
+      ];
+
+const canonical = lang === 'nl' ? '/diensten/' : '/en/services/';
+const alternates = [
+  { lang: 'nl' as Lang, href: '/diensten/' },
+  { lang: 'en' as Lang, href: '/en/services/' },
+];
+---
+
+<BaseLayout
+  title={lang === 'nl' ? 'Diensten — Hoe wij je reis plannen | Suriname Travels' : 'Services — How we plan your trip | Suriname Travels'}
+  description={t('services.subtitle')}
+  lang={lang}
+  canonical={canonical}
+  alternates={alternates}
+>
+  <section class="container-narrow pt-10 md:pt-14">
+    <Breadcrumbs items={[
+      { label: t('nav.home'), href: routeFor(lang, 'home') },
+      { label: t('nav.services') },
+    ]} />
+    <div class="mt-6 max-w-3xl">
+      <h1 class="font-display text-4xl md:text-5xl lg:text-6xl text-ink leading-[1.05]">{t('services.title')}</h1>
+      <p class="mt-4 text-lg text-ink-soft">{t('services.subtitle')}</p>
+    </div>
+  </section>
+
+  <section class="container-narrow mt-12">
+    <div class="rounded-3xl bg-sun-300/30 border border-sun-500/40 p-7 md:p-9">
+      <h2 class="font-display text-2xl md:text-3xl text-ink mb-3">{t('services.disclosure.title')}</h2>
+      <p class="text-ink-soft text-[15px] md:text-base leading-relaxed">{t('services.disclosure.body')}</p>
+    </div>
+  </section>
+
+  <section class="container-narrow py-16 md:py-20">
+    <div class="max-w-2xl mb-10">
+      <h2 class="font-display text-3xl md:text-4xl text-ink">{t('services.partners.title')}</h2>
+    </div>
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {partners.map((p) => <PartnerCard {...p} />)}
+    </div>
+  </section>
+
+  <section class="container-narrow py-12">
+    <div class="rounded-3xl bg-jungle-50 border border-jungle-100 p-8 md:p-12">
+      <h2 class="font-display text-3xl md:text-4xl text-ink">{t('services.howItWorks')}</h2>
+      <ol class="mt-8 grid gap-6 md:grid-cols-3">
+        <li>
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg mb-3">1</span>
+          <h3 class="font-display text-xl text-ink mb-2">{t('how.step1.title')}</h3>
+          <p class="text-ink-soft text-[15px]">{t('how.step1.body')}</p>
+        </li>
+        <li>
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg mb-3">2</span>
+          <h3 class="font-display text-xl text-ink mb-2">{t('how.step2.title')}</h3>
+          <p class="text-ink-soft text-[15px]">{t('how.step2.body')}</p>
+        </li>
+        <li>
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg mb-3">3</span>
+          <h3 class="font-display text-xl text-ink mb-2">{t('how.step3.title')}</h3>
+          <p class="text-ink-soft text-[15px]">{t('how.step3.body')}</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <FAQ title={t('faq.title')} faqs={servicesFaqs} />
+
+  <section class="container-narrow py-12">
+    <div class="rounded-3xl bg-leaf-500 text-jungle-900 p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="max-w-xl">
+        <h2 class="font-display text-3xl md:text-4xl text-jungle-900">{t('footerCta.title')}</h2>
+        <p class="mt-2 text-jungle-900/80">{t('footerCta.subtitle')}</p>
+      </div>
+      <a href={routeFor(lang, 'blog')} class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-jungle-900 text-white font-semibold hover:bg-jungle-700 transition no-underline">
+        {t('hero.cta.primary')}
+      </a>
+    </div>
+  </section>
+</BaseLayout>

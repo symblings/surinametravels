@@ -1,0 +1,265 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@components/Hero.astro';
+import PostCard from '@components/PostCard.astro';
+import DestinationCard from '@components/DestinationCard.astro';
+import FAQ from '@components/FAQ.astro';
+import { useTranslations, routeFor, readingTime, type Lang } from '@i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const allPosts = await getCollection('posts', ({ data }) => data.lang === lang && !data.draft);
+const featured = allPosts
+  .filter((p) => p.data.featured)
+  .sort((a, b) => +b.data.publishDate - +a.data.publishDate)
+  .slice(0, 3)
+  .map((p) => ({
+    slug: p.id.replace(/^[a-z]{2}\//, ''),
+    title: p.data.title,
+    description: p.data.description,
+    publishDate: p.data.publishDate,
+    heroImage: typeof p.data.heroImage === 'string' ? p.data.heroImage : (p.data.heroImage as { src: string }).src,
+    heroAlt: p.data.heroAlt,
+    category: p.data.category,
+    tags: p.data.tags,
+    readingMinutes: readingTime(p.body ?? ''),
+  }));
+
+const destinations =
+  lang === 'nl'
+    ? [
+        { name: 'Brownsberg', region: 'Brokopondo', highlight: 'Natuur', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80', alt: 'Berglandschap in het Brownsberg natuurpark' },
+        { name: 'Galibi', region: 'Marowijne-monding', highlight: 'Wildlife', image: 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=900&q=80', alt: 'Tropisch strand bij zonsondergang' },
+        { name: 'Centraal Suriname', region: 'Sipaliwini', highlight: 'Avontuur', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&q=80', alt: 'Tropisch regenwoud van bovenaf' },
+        { name: 'Paramaribo', region: 'Hoofdstad', highlight: 'Cultuur', image: 'https://images.unsplash.com/photo-1580237072617-771c3ecc4a24?w=900&q=80', alt: 'Houten koloniale gevels in Paramaribo' },
+      ]
+    : [
+        { name: 'Brownsberg', region: 'Brokopondo district', highlight: 'Nature', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80', alt: 'Mountain landscape in Brownsberg nature park' },
+        { name: 'Galibi', region: 'Marowijne estuary', highlight: 'Wildlife', image: 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=900&q=80', alt: 'Tropical beach at sunset' },
+        { name: 'Central Suriname', region: 'Sipaliwini', highlight: 'Adventure', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&q=80', alt: 'Tropical rainforest from above' },
+        { name: 'Paramaribo', region: 'Capital', highlight: 'Culture', image: 'https://images.unsplash.com/photo-1580237072617-771c3ecc4a24?w=900&q=80', alt: 'Wooden colonial facades in Paramaribo' },
+      ];
+
+const reviews =
+  lang === 'nl'
+    ? [
+        { quote: 'De gids over Brownsberg klopte tot in de details. Geen enkele verrassing onderweg.', name: 'Maaike de Bruin', role: 'Reisde 2 weken in 2026' },
+        { quote: 'Eindelijk een Suriname-site die niet probeert je iets te verkopen. Eerlijke partners, helder advies.', name: 'Rashid Mohabir', role: 'Plande een familietrip' },
+        { quote: 'De FAQ over visa scheelde ons een week stress. Direct doorklikken, ingevuld, klaar.', name: 'Bas Klaver', role: 'Eerste reis naar SR' },
+      ]
+    : [
+        { quote: 'The Brownsberg guide was accurate down to the details. Zero surprises on the trail.', name: 'Maaike de Bruin', role: 'Two-week trip, 2026' },
+        { quote: 'Finally a Suriname site that isn\'t trying to upsell. Honest partners, clear advice.', name: 'Rashid Mohabir', role: 'Planned a family trip' },
+        { quote: 'The visa FAQ saved us a week of stress. Click through, filled it in, done.', name: 'Bas Klaver', role: 'First trip to SR' },
+    ];
+
+const homeFaqs =
+  lang === 'nl'
+    ? [
+        { q: 'Wanneer is de beste tijd om Suriname te bezoeken?', a: 'Februari–maart en augustus–november zijn het droogst en het meest comfortabel. Vermijd mei–juli vanwege de grote regentijd.' },
+        { q: 'Is Suriname veilig voor reizigers?', a: 'Suriname is over het algemeen veilig voor toeristen. Houd standaard reistactieken aan in Paramaribo en boek het binnenland via een lokale gids.' },
+        { q: 'Hoeveel kost een gemiddelde reis?', a: 'Reken op 2.000 tot 3.700 euro voor twee weken inclusief vlucht, een binnenlandtrip en accommodatie. Lees onze praktische gids voor een volledige begroting.' },
+        { q: 'Wat is de officiële taal?', a: 'Nederlands is de officiële taal. Daarnaast wordt Sranan Tongo veel gesproken, evenals Sarnami, Javaans en talen van inheemse en Marron-gemeenschappen.' },
+        { q: 'Heb ik echt een lokale gids nodig?', a: 'Voor het binnenland: ja. Voor Paramaribo en de directe omgeving prima zelf te doen. Lokale gidsen verdienen ook een rol omdat het inkomen biedt aan dorpen die anders amper toeristen zien.' },
+      ]
+    : [
+        { q: 'When is the best time to visit Suriname?', a: 'February–March and August–November are driest and most comfortable. Avoid May–July due to the major wet season.' },
+        { q: 'Is Suriname safe for travelers?', a: 'Suriname is generally safe for tourists. Apply standard travel sense in Paramaribo and book interior trips through a local guide.' },
+        { q: 'How much does an average trip cost?', a: 'Plan on €2,000 to €3,700 for two weeks including flight, an interior trip, and accommodation. Our practical guide has a full budget.' },
+        { q: 'What\'s the official language?', a: 'Dutch is the official language. Sranan Tongo is widely spoken, as are Sarnami, Javanese, and Indigenous and Maroon community languages.' },
+        { q: 'Do I really need a local guide?', a: 'For the interior: yes. For Paramaribo and immediate surroundings, you\'re fine on your own. Local guides also matter because they bring income to villages that otherwise see few visitors.' },
+      ];
+
+const canonical = routeFor(lang, 'home');
+const otherLang: Lang = lang === 'nl' ? 'en' : 'nl';
+const alternates = [
+  { lang: 'nl' as Lang, href: '/' },
+  { lang: 'en' as Lang, href: '/en/' },
+];
+---
+
+<BaseLayout
+  title={lang === 'nl' ? 'Suriname Travels — Reisgids voor Suriname' : 'Suriname Travels — Travel guide to Suriname'}
+  description={t('site.tagline')}
+  lang={lang}
+  canonical={canonical}
+  alternates={alternates}
+>
+  <Hero lang={lang} />
+
+  <section class="container-narrow py-16 md:py-24">
+    <div class="max-w-2xl mb-12">
+      <h2 class="font-display text-3xl md:text-4xl text-ink">{t('pillars.title')}</h2>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      <article class="card p-7">
+        <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-leaf-500/20 text-jungle-700 mb-4">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2c1.5 4 3 6 6 9-4 0-6-2-6-2s-2 2-6 2c3-3 4.5-5 6-9z" />
+            <line x1="12" y1="11" x2="12" y2="22" />
+          </svg>
+        </span>
+        <h3 class="font-display text-xl text-ink mb-2">{t('pillars.nature.title')}</h3>
+        <p class="text-ink-soft text-[15px]">{t('pillars.nature.body')}</p>
+      </article>
+      <article class="card p-7">
+        <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-sun-300/40 text-clay-500 mb-4">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 21V8l9-5 9 5v13" />
+            <path d="M9 21v-7h6v7" />
+          </svg>
+        </span>
+        <h3 class="font-display text-xl text-ink mb-2">{t('pillars.culture.title')}</h3>
+        <p class="text-ink-soft text-[15px]">{t('pillars.culture.body')}</p>
+      </article>
+      <article class="card p-7">
+        <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-jungle-50 text-jungle-700 mb-4">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 17l6-6 4 4 8-8" />
+            <polyline points="14 7 21 7 21 14" />
+          </svg>
+        </span>
+        <h3 class="font-display text-xl text-ink mb-2">{t('pillars.adventure.title')}</h3>
+        <p class="text-ink-soft text-[15px]">{t('pillars.adventure.body')}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="container-narrow py-12">
+    <div class="rounded-3xl bg-jungle-50 border border-jungle-100 p-8 md:p-10">
+      <p class="text-xs uppercase tracking-widest text-jungle-700 mb-4">{t('stats.eyebrow')}</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <div>
+          <div class="font-display text-4xl text-ink">100<span class="text-leaf-500">+</span></div>
+          <div class="text-xs uppercase tracking-wide text-ink-soft mt-1">{t('stats.posts')}</div>
+        </div>
+        <div class="md:bg-leaf-500 md:rounded-2xl md:p-5 md:-m-1 md:text-jungle-900">
+          <div class="font-display text-4xl">16</div>
+          <div class="text-xs uppercase tracking-wide mt-1 md:text-jungle-900/80">{t('stats.regions')}</div>
+        </div>
+        <div>
+          <div class="font-display text-4xl text-ink">20<span class="text-leaf-500">+</span></div>
+          <div class="text-xs uppercase tracking-wide text-ink-soft mt-1">{t('stats.partners')}</div>
+        </div>
+        <div>
+          <div class="font-display text-4xl text-ink">12<span class="text-leaf-500">k</span></div>
+          <div class="text-xs uppercase tracking-wide text-ink-soft mt-1">{t('stats.readers')}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-narrow py-16 md:py-20">
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+      <div>
+        <h2 class="font-display text-3xl md:text-4xl text-ink">{t('destinations.title')}</h2>
+        <p class="text-ink-soft mt-2 max-w-xl">{t('destinations.subtitle')}</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      {destinations.map((d) => <DestinationCard {...d} />)}
+    </div>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="container-narrow py-16 md:py-20">
+      <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+        <div>
+          <h2 class="font-display text-3xl md:text-4xl text-ink">{t('featured.title')}</h2>
+          <p class="text-ink-soft mt-2 max-w-xl">{t('featured.subtitle')}</p>
+        </div>
+        <a href={routeFor(lang, 'blog')} class="btn-secondary text-sm" style="padding: 0.625rem 1.25rem;">
+          {t('featured.viewAll')}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {featured.map((post) => <PostCard post={post} lang={lang} />)}
+      </div>
+    </section>
+  )}
+
+  <section class="container-narrow py-16 md:py-20">
+    <div class="rounded-3xl bg-gradient-to-br from-jungle-700 to-jungle-900 text-white p-8 md:p-12">
+      <div class="max-w-2xl">
+        <h2 class="font-display text-3xl md:text-4xl text-white">{t('how.title')}</h2>
+        <p class="mt-3 text-jungle-50/85">{t('how.subtitle')}</p>
+      </div>
+      <ol class="mt-10 grid gap-6 md:grid-cols-3">
+        <li class="rounded-2xl bg-white/10 backdrop-blur p-6 border border-white/10">
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg mb-4">1</span>
+          <h3 class="font-display text-xl text-white mb-2">{t('how.step1.title')}</h3>
+          <p class="text-jungle-50/85 text-sm">{t('how.step1.body')}</p>
+        </li>
+        <li class="rounded-2xl bg-white/10 backdrop-blur p-6 border border-white/10">
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg mb-4">2</span>
+          <h3 class="font-display text-xl text-white mb-2">{t('how.step2.title')}</h3>
+          <p class="text-jungle-50/85 text-sm">{t('how.step2.body')}</p>
+        </li>
+        <li class="rounded-2xl bg-white/10 backdrop-blur p-6 border border-white/10">
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg mb-4">3</span>
+          <h3 class="font-display text-xl text-white mb-2">{t('how.step3.title')}</h3>
+          <p class="text-jungle-50/85 text-sm">{t('how.step3.body')}</p>
+        </li>
+      </ol>
+      <div class="mt-8">
+        <a href={routeFor(lang, 'services')} class="btn-primary">
+          {t('hero.cta.secondary')}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-narrow py-16 md:py-20">
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+      <div>
+        <h2 class="font-display text-3xl md:text-4xl text-ink">{t('reviews.title')}</h2>
+        <p class="text-ink-soft mt-2">{t('reviews.more')}</p>
+      </div>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      {reviews.map((r) => (
+        <figure class="card p-7 flex flex-col">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="text-leaf-500 mb-4" aria-hidden="true">
+            <path d="M9 7H5a3 3 0 0 0-3 3v4a3 3 0 0 0 3 3h2v3a1 1 0 0 0 1 1h.5a1 1 0 0 0 .8-.4l3.7-4.6V10a3 3 0 0 0-3-3zm10 0h-4a3 3 0 0 0-3 3v4a3 3 0 0 0 3 3h2v3a1 1 0 0 0 1 1h.5a1 1 0 0 0 .8-.4l3.7-4.6V10a3 3 0 0 0-3-3z" />
+          </svg>
+          <blockquote class="text-ink-soft text-[15px] leading-relaxed flex-1">"{r.quote}"</blockquote>
+          <figcaption class="mt-5 pt-5 border-t border-mist">
+            <div class="font-display text-ink">{r.name}</div>
+            <div class="text-xs text-ink-soft mt-0.5">{r.role}</div>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <FAQ title={t('faq.title')} subtitle={t('faq.subtitle')} faqs={homeFaqs} />
+
+  <section class="container-narrow py-12">
+    <div class="rounded-3xl bg-leaf-500 text-jungle-900 p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="max-w-xl">
+        <h2 class="font-display text-3xl md:text-4xl text-jungle-900">{t('footerCta.title')}</h2>
+        <p class="mt-2 text-jungle-900/80">{t('footerCta.subtitle')}</p>
+      </div>
+      <a href={routeFor(lang, 'services')} class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-jungle-900 text-white font-semibold hover:bg-jungle-700 transition no-underline">
+        {t('footerCta.button')}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

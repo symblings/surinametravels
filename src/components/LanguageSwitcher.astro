@@ -1,0 +1,27 @@
+---
+import { useTranslations, routeFor, type Lang } from '@i18n/utils';
+
+interface Props {
+  lang: Lang;
+  alternateUrl?: string;
+}
+const { lang, alternateUrl } = Astro.props;
+const t = useTranslations(lang);
+
+const otherLang: Lang = lang === 'nl' ? 'en' : 'nl';
+const fallback = routeFor(otherLang, 'home');
+const href = alternateUrl ?? fallback;
+---
+
+<a
+  href={href}
+  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-mist text-sm text-ink-soft hover:border-jungle-200 hover:text-jungle-700 transition"
+  hreflang={otherLang === 'nl' ? 'nl-NL' : 'en-US'}
+  aria-label={`Switch to ${t('lang.switch')}`}
+>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+  </svg>
+  <span>{t('lang.switch')}</span>
+</a>

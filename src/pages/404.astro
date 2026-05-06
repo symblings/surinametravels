@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { useTranslations, routeFor } from '@i18n/utils';
+
+const t = useTranslations('nl');
+---
+
+<BaseLayout
+  title="404 — Pagina niet gevonden | Suriname Travels"
+  description="Deze pagina bestaat niet meer of is verplaatst."
+  lang="nl"
+  canonical="/404/"
+  noindex
+>
+  <section class="container-narrow py-24 md:py-32 text-center">
+    <p class="text-jungle-700 font-display text-7xl md:text-9xl">404</p>
+    <h1 class="font-display text-3xl md:text-4xl text-ink mt-6">Deze pagina is een ander pad ingeslagen</h1>
+    <p class="mt-3 text-ink-soft max-w-md mx-auto">Geen zorgen — kies hieronder een richting en je komt er wel.</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href={routeFor('nl', 'home')} class="btn-primary">{t('nav.home')}</a>
+      <a href={routeFor('nl', 'blog')} class="btn-secondary">{t('nav.blog')}</a>
+    </div>
+  </section>
+</BaseLayout>

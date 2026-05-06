@@ -1,0 +1,80 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPostLayout from '@layouts/BlogPostLayout.astro';
+import { readingTime, routeFor, type Lang } from '@i18n/utils';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => data.lang === 'nl' && !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/^[a-z]{2}\//, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const lang: Lang = 'nl';
+const slug = post.id.replace(/^[a-z]{2}\//, '');
+
+const { Content, headings } = await render(post);
+const toc = headings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }));
+const readingMinutes = readingTime(post.body ?? '');
+const heroImage = typeof post.data.heroImage === 'string' ? post.data.heroImage : (post.data.heroImage as { src: string }).src;
+
+const allPosts = await getCollection('posts', ({ data }) => data.lang === lang && !data.draft);
+const related = allPosts
+  .filter((p) => p.id !== post.id)
+  .map((p) => ({
+    p,
+    overlap: p.data.tags.filter((t) => post.data.tags.includes(t)).length,
+  }))
+  .sort((a, b) => b.overlap - a.overlap || +b.p.data.publishDate - +a.p.data.publishDate)
+  .slice(0, 3)
+  .map(({ p }) => ({
+    slug: p.id.replace(/^[a-z]{2}\//, ''),
+    title: p.data.title,
+    description: p.data.description,
+    publishDate: p.data.publishDate,
+    heroImage: typeof p.data.heroImage === 'string' ? p.data.heroImage : (p.data.heroImage as { src: string }).src,
+    heroAlt: p.data.heroAlt,
+    category: p.data.category,
+    tags: p.data.tags,
+    readingMinutes: readingTime(p.body ?? ''),
+  }));
+
+let alternateUrl: string | undefined;
+let alternateLang: Lang | undefined;
+if (post.data.translationKey) {
+  const translation = (await getCollection('posts', ({ data }) =>
+    data.lang === 'en' && data.translationKey === post.data.translationKey && !data.draft
+  ))[0];
+  if (translation) {
+    alternateUrl = `/en/blog/${translation.id.replace(/^[a-z]{2}\//, '')}/`;
+    alternateLang = 'en';
+  }
+}
+
+const canonical = `${routeFor(lang, 'blog')}${slug}/`;
+---
+
+<BlogPostLayout
+  title={post.data.title}
+  description={post.data.description}
+  lang={lang}
+  publishDate={post.data.publishDate}
+  updatedDate={post.data.updatedDate}
+  author={post.data.author}
+  heroImage={heroImage}
+  heroAlt={post.data.heroAlt}
+  category={post.data.category}
+  tags={post.data.tags}
+  readingMinutes={readingMinutes}
+  faqs={post.data.faqs}
+  toc={toc}
+  related={related}
+  canonical={canonical}
+  alternateUrl={alternateUrl}
+  alternateLang={alternateLang}
+  slug={slug}
+>
+  <Content />
+</BlogPostLayout>
