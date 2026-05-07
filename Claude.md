@@ -4,6 +4,12 @@ Suriname Travels — a static, SEO-first travel-blog about Suriname. Bilingual (
 
 ---
 
+# Session start
+
+**Read [`.claude/memories/project-context.md`](./.claude/memories/project-context.md) before doing anything else** in this repo. It holds cross-session context (who the user is, decisions already made, multi-machine workflow) that doesn't live in code or git history.
+
+---
+
 # Tech Stack
 
 - **Language:** TypeScript
