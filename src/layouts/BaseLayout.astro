@@ -82,6 +82,16 @@ const alternateUrl = alternates?.find((a) => a.lang !== lang)?.href;
 
     <meta name="generator" content={Astro.generator} />
     <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-161P8DK54R"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-161P8DK54R');
+    </script>
+
     <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col">
