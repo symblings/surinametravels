@@ -17,9 +17,10 @@ export const ui = {
     'nav.services': 'Diensten',
     'nav.about': 'Over ons',
 
-    'hero.eyebrow': 'Ontdek het groene hart van Zuid-Amerika',
-    'hero.title': 'Ontdek Suriname',
-    'hero.subtitle': 'Reisverhalen, praktische gidsen en oerwoud-avonturen — alles wat je nodig hebt om Suriname op je eigen manier te beleven.',
+    'hero.eyebrow': 'Reizen naar Suriname',
+    'hero.title': 'Suriname',
+    'hero.titleAccent': 'zonder filters.',
+    'hero.subtitle': 'Echte avonturen. Eerlijke partners.',
     'hero.cta.primary': 'Lees de verhalen',
     'hero.cta.secondary': 'Plan jouw reis',
 
@@ -128,9 +129,10 @@ export const ui = {
     'nav.services': 'Services',
     'nav.about': 'About',
 
-    'hero.eyebrow': 'Discover the green heart of South America',
-    'hero.title': 'Discover Suriname',
-    'hero.subtitle': 'Travel stories, practical guides, and rainforest adventures — everything you need to experience Suriname on your own terms.',
+    'hero.eyebrow': 'Travel to Suriname',
+    'hero.title': 'Suriname',
+    'hero.titleAccent': 'unfiltered.',
+    'hero.subtitle': 'Real adventures. Honest partners.',
     'hero.cta.primary': 'Read the stories',
     'hero.cta.secondary': 'Plan your trip',
 
