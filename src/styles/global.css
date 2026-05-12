@@ -24,7 +24,7 @@
 
   --color-clay-500: #C97A4A;
 
-  --color-sand: #FAF7F0;
+  --color-sand: #F6F4E8;
   --color-ink: #1A2E1F;
   --color-ink-soft: #38473C;
   --color-mist: #E8EDE6;
@@ -37,6 +37,27 @@
 
   --shadow-card: 0 8px 30px -12px rgba(15, 40, 24, 0.18);
   --shadow-soft: 0 2px 12px -6px rgba(15, 40, 24, 0.12);
+
+  /* Modular type scale — mobile-first via clamp() */
+  --text-eyebrow: 11px;
+  --text-body: clamp(15px, 1rem, 17px);
+  --text-card-title: clamp(20px, 1.5rem, 28px);
+  --text-section: clamp(32px, 5vw, 42px);
+  --text-hero: clamp(46px, 9vw, 96px);
+
+  /* Spacing scale */
+  --space-edge-mobile: 20px;
+  --space-edge-desktop: 48px;
+  --space-section-y: clamp(40px, 8vw, 80px);
+
+  /* Dark-mode overlay tokens (cinematic hero, dark sections) */
+  --color-overlay-strong: rgba(15, 40, 24, 0.95);
+  --color-overlay-mid: rgba(15, 40, 24, 0.55);
+  --color-overlay-soft: rgba(15, 40, 24, 0.35);
+
+  /* Clay full ramp */
+  --color-clay-400: #D49066;
+  --color-clay-600: #B36738;
 }
 
 @layer base {
@@ -179,4 +200,173 @@
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-size: 0.9em;
+}
+
+
+/* ============================================================
+   Cinematic Adventure components (added 2026-05-12)
+   ============================================================ */
+
+@layer components {
+  /* Eyebrow — uppercase overline used above section titles and on hero */
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--text-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* Cinematic primary button — square, uppercase, letter-spaced, clay bg */
+  .btn-cinematic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    min-height: 48px;
+    padding: 0.875rem 1.75rem;
+    background: var(--color-clay-500);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 0;
+    transition: background 0.18s ease, transform 0.18s ease;
+  }
+  .btn-cinematic:hover {
+    background: var(--color-clay-600);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  /* Cinematic ghost button — transparent over dark bg */
+  .btn-cinematic-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    min-height: 48px;
+    padding: 0.875rem 1.75rem;
+    background: transparent;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    transition: background 0.18s ease, border-color 0.18s ease;
+  }
+  .btn-cinematic-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.85);
+    color: white;
+  }
+
+  /* Card with image-overlay (no white bg) */
+  .card-overlay {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+    background: var(--color-jungle-900);
+  }
+  .card-overlay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+  }
+  .card-overlay:hover img {
+    transform: scale(1.04);
+  }
+  .card-overlay .card-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, transparent 45%, rgba(15, 40, 24, 0.92) 100%);
+    pointer-events: none;
+  }
+  .card-overlay .card-overlay-content {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  @media (min-width: 768px) {
+    .card-overlay .card-overlay-content {
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-overlay img { transition: none; }
+    .card-overlay:hover img { transform: none; }
+  }
+
+  /* Dark section wrapper */
+  .section-dark {
+    background: var(--color-jungle-900);
+    color: white;
+  }
+
+  /* Section header — eyebrow + serif title (+ optional count) */
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: var(--space-section-y) 24px;
+    padding-inline: var(--space-edge-mobile);
+  }
+  .section-header h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-section);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .section-header .section-count {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-leaf-400);
+  }
+  @media (min-width: 768px) {
+    .section-header {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-inline: var(--space-edge-desktop);
+    }
+  }
+}
+
+/* Body bg-mode switch — set on <body> via data-bg attribute */
+body[data-bg="dark"] {
+  background-color: var(--color-jungle-900);
+  color: white;
+}
+body[data-bg="light"] {
+  background-color: var(--color-sand);
+  color: var(--color-ink);
+}
+
+/* Logo brightness shift when rendered on dark cinematic header.
+   The logo's dark-green silhouette would be unreadable on jungle-900,
+   so we lift it via brightness + slight saturate to keep it on-brand. */
+.logo-dark-mode {
+  filter: brightness(1.5) saturate(1.1);
 }
