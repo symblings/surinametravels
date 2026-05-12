@@ -5,9 +5,12 @@ import LanguageSwitcher from './LanguageSwitcher.astro';
 interface Props {
   lang: Lang;
   alternateUrl?: string;
+  /** When true, header renders in dark cinematic variant. */
+  dark?: boolean;
 }
 
-const { lang, alternateUrl } = Astro.props;
+const { lang, alternateUrl, dark = false } = Astro.props;
+const isDark = dark;
 const t = useTranslations(lang);
 
 const navItems = [
@@ -27,7 +30,13 @@ function isActive(href: string) {
   {t('a11y.skipToContent')}
 </a>
 
-<header class="sticky top-0 z-40 backdrop-blur bg-sand/85 border-b border-mist">
+<header
+  class={`sticky top-0 z-40 backdrop-blur transition-colors duration-200 border-b ${
+    isDark
+      ? 'bg-jungle-900/80 border-white/10'
+      : 'bg-sand/85 border-mist'
+  }`}
+>
   <div class="container-narrow flex items-center justify-between py-4">
     <a href={routeFor(lang, 'home')} class="flex items-center group" aria-label="Suriname Travels — home">
       <img
@@ -36,7 +45,7 @@ function isActive(href: string) {
         aria-hidden="true"
         width="40"
         height="40"
-        class="md:hidden h-9 w-auto"
+        class={`md:hidden h-9 w-auto ${isDark ? 'logo-dark-mode' : ''}`}
         loading="eager"
       />
       <img
@@ -45,7 +54,7 @@ function isActive(href: string) {
         aria-hidden="true"
         width="220"
         height="56"
-        class="hidden md:block h-10 w-auto"
+        class={`hidden md:block h-10 w-auto ${isDark ? 'logo-dark-mode' : ''}`}
         loading="eager"
       />
     </a>
@@ -57,8 +66,10 @@ function isActive(href: string) {
             href={item.href}
             class={`px-3 py-2 rounded-full text-sm font-medium transition ${
               isActive(item.href)
-                ? 'bg-jungle-50 text-jungle-700'
-                : 'text-ink-soft hover:text-jungle-700 hover:bg-jungle-50/60'
+                ? (isDark ? 'bg-white/10 text-white' : 'bg-jungle-50 text-jungle-700')
+                : (isDark
+                    ? 'text-white/85 hover:text-white hover:bg-white/10'
+                    : 'text-ink-soft hover:text-jungle-700 hover:bg-jungle-50/60')
             }`}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
@@ -73,7 +84,13 @@ function isActive(href: string) {
       <a href={routeFor(lang, 'services')} class="hidden md:inline-flex btn-primary text-sm" style="padding: 0.625rem 1.25rem;">
         {t('hero.cta.secondary')}
       </a>
-      <button id="nav-toggle" class="md:hidden p-2 rounded-full hover:bg-jungle-50" aria-label={t('a11y.menu')} aria-expanded="false" aria-controls="mobile-nav">
+      <button
+        id="nav-toggle"
+        class={`md:hidden p-2 rounded-full ${isDark ? 'text-white hover:bg-white/10' : 'text-ink hover:bg-jungle-50'}`}
+        aria-label={t('a11y.menu')}
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />
@@ -83,11 +100,11 @@ function isActive(href: string) {
     </div>
   </div>
 
-  <nav id="mobile-nav" class="md:hidden hidden border-t border-mist bg-white" aria-label="Mobile">
+  <nav id="mobile-nav" class={`md:hidden hidden border-t ${isDark ? 'border-white/10 bg-jungle-900' : 'border-mist bg-white'}`} aria-label="Mobile">
     <div class="container-narrow py-3 flex flex-col gap-1">
       {
         navItems.map((item) => (
-          <a href={item.href} class="px-3 py-2.5 rounded-lg hover:bg-jungle-50 text-ink">
+          <a href={item.href} class={`px-3 py-2.5 rounded-lg ${isDark ? 'text-white hover:bg-white/10' : 'text-ink hover:bg-jungle-50'}`}>
             {item.label}
           </a>
         ))

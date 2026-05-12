@@ -22,6 +22,8 @@ interface Props {
   modifiedTime?: Date;
   author?: string;
   noindex?: boolean;
+  /** Visual mode: 'cinematic' marks the body as dark for cinematic hero pages. */
+  heroVariant?: 'cinematic' | 'standard';
 }
 
 const {
@@ -36,7 +38,10 @@ const {
   modifiedTime,
   author,
   noindex,
+  heroVariant = 'standard',
 } = Astro.props;
+
+const bgMode = heroVariant === 'cinematic' ? 'dark' : 'light';
 
 const orgJsonLd = {
   '@context': 'https://schema.org',
@@ -96,8 +101,8 @@ const alternateUrl = alternates?.find((a) => a.lang !== lang)?.href;
 
     <slot name="head" />
   </head>
-  <body class="min-h-screen flex flex-col">
-    <Header lang={lang} alternateUrl={alternateUrl} />
+  <body class="min-h-screen flex flex-col" data-bg={bgMode}>
+    <Header lang={lang} alternateUrl={alternateUrl} dark={bgMode === 'dark'} />
     <main id="main" class="flex-1">
       <slot />
     </main>
