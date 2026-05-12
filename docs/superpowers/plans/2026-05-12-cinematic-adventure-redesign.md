@@ -37,18 +37,18 @@ User has uploaded logo + favicon. This phase puts them in the live site without 
 ### Task 1: Verify brand asset files exist on disk
 
 **Files (no modifications, only verification):**
-- Check: `public/hero/home-hero.jpg`
-- Check: `public/brand/logo-suriname-travels.png`
-- Check: `public/brand/logo-mark.png`
-- Check: `public/favicon.png`
+- Check: `public/hero/surinametravels-hero-image.jpg`
+- Check: `public/brand/surinametravels-logo-transparant.png`
+- Check: `public/brand/suriname-travels-beeldmerk.png`
+- Check: `public/favicon.jpeg`
 
 - [ ] **Step 1: List files**
 
 ```bash
-ls -lh ~/projects/surinametravels/public/hero/home-hero.jpg \
-       ~/projects/surinametravels/public/brand/logo-suriname-travels.png \
-       ~/projects/surinametravels/public/brand/logo-mark.png \
-       ~/projects/surinametravels/public/favicon.png
+ls -lh ~/projects/surinametravels/public/hero/surinametravels-hero-image.jpg \
+       ~/projects/surinametravels/public/brand/surinametravels-logo-transparant.png \
+       ~/projects/surinametravels/public/brand/suriname-travels-beeldmerk.png \
+       ~/projects/surinametravels/public/favicon.jpeg
 ```
 
 Expected: all four files exist, non-zero size.
@@ -66,7 +66,7 @@ Do not proceed to Task 2 until all four files are present. The user must manuall
 
 - [ ] **Step 1: Define expected outcome**
 
-After this task, `dist/index.html` should reference `/favicon.png` as the primary icon. The old `/favicon.svg` and `/favicon.ico` may remain as fallbacks but the PNG takes priority.
+After this task, `dist/index.html` should reference `/favicon.jpeg` as the primary icon. The old `/favicon.svg` and `/favicon.ico` may remain as fallbacks but the PNG takes priority.
 
 - [ ] **Step 2: Make the edit**
 
@@ -80,17 +80,17 @@ OLD:
 
 NEW:
 ```astro
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/jpeg" href="/favicon.jpeg" />
     <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.jpeg" />
 ```
 
 - [ ] **Step 3: Build and verify**
 
 ```bash
 cd ~/projects/surinametravels && npm run build 2>&1 | tail -5
-grep -c 'href="/favicon.png"' dist/index.html
+grep -c 'href="/favicon.jpeg"' dist/index.html
 ```
 
 Expected: build completes, grep returns `2` (one for icon, one for apple-touch-icon).
@@ -99,12 +99,12 @@ Expected: build completes, grep returns `2` (one for icon, one for apple-touch-i
 
 ```bash
 cd ~/projects/surinametravels
-git add public/favicon.png public/brand/logo-suriname-travels.png public/brand/logo-mark.png public/hero/home-hero.jpg src/layouts/BaseLayout.astro
+git add public/favicon.jpeg public/brand/surinametravels-logo-transparant.png public/brand/suriname-travels-beeldmerk.png public/hero/surinametravels-hero-image.jpg src/layouts/BaseLayout.astro
 git commit -m "$(cat <<'EOF'
 Add brand assets: logo + favicon + hero image
 
-- favicon.png (toucan mark) becomes primary; .ico/.svg keep as fallback
-- apple-touch-icon points to favicon.png
+- favicon.jpeg (toucan mark) becomes primary; .ico/.svg keep as fallback
+- apple-touch-icon points to favicon.jpeg
 - logo + hero image staged for upcoming redesign
 
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
@@ -123,7 +123,7 @@ Note: this task only swaps the existing "S" circle + "SurinameTravels" text word
 
 - [ ] **Step 1: Define expected outcome**
 
-After this task, `dist/index.html` Header `<a>` (the logo link) should contain `<img src="/brand/logo-mark.png"` (mobile) and `<img src="/brand/logo-suriname-travels.png"` (desktop). The "S" circle span is removed. The existing accessibility label `aria-label="Suriname Travels — home"` stays.
+After this task, `dist/index.html` Header `<a>` (the logo link) should contain `<img src="/brand/suriname-travels-beeldmerk.png"` (mobile) and `<img src="/brand/surinametravels-logo-transparant.png"` (desktop). The "S" circle span is removed. The existing accessibility label `aria-label="Suriname Travels — home"` stays.
 
 - [ ] **Step 2: Make the edit**
 
@@ -141,7 +141,7 @@ NEW:
 ```astro
     <a href={routeFor(lang, 'home')} class="flex items-center group" aria-label="Suriname Travels — home">
       <img
-        src="/brand/logo-mark.png"
+        src="/brand/suriname-travels-beeldmerk.png"
         alt=""
         aria-hidden="true"
         width="40"
@@ -150,7 +150,7 @@ NEW:
         loading="eager"
       />
       <img
-        src="/brand/logo-suriname-travels.png"
+        src="/brand/surinametravels-logo-transparant.png"
         alt=""
         aria-hidden="true"
         width="220"
@@ -165,8 +165,8 @@ NEW:
 
 ```bash
 cd ~/projects/surinametravels && npm run build 2>&1 | tail -5
-grep -c '/brand/logo-mark.png' dist/index.html
-grep -c '/brand/logo-suriname-travels.png' dist/index.html
+grep -c '/brand/suriname-travels-beeldmerk.png' dist/index.html
+grep -c '/brand/surinametravels-logo-transparant.png' dist/index.html
 ```
 
 Expected: build completes; both greps return ≥ 1.
@@ -187,7 +187,7 @@ git add src/components/Header.astro
 git commit -m "$(cat <<'EOF'
 Replace placeholder S-circle with brand logo in Header
 
-Mobile: logo-mark.png (~36px). Desktop: full wordmark (~40px).
+Mobile: beeldmerk (~36px). Desktop: full wordmark (~40px).
 Same anchor link, same aria-label — purely a visual swap.
 
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
@@ -614,7 +614,7 @@ EOF
 - [ ] **Step 1: Define expected outcome**
 
 After this task, the homepage hero:
-- Loads `/hero/home-hero.jpg` by default (or a video if `as="video"` prop is passed)
+- Loads `/hero/surinametravels-hero-image.jpg` by default (or a video if `as="video"` prop is passed)
 - Stronger gradient overlay per spec §11.2: `rgba(15,40,24,0.55) → 0.35 → 0.95`
 - Mobile (default): full-bleed image, hero height `min(70vh, 600px)`, content stacked bottom-left, h1 at `--text-hero` (~46px), 2 stacked full-width buttons
 - Desktop (≥1024px): same hero, content centered, h1 ~96px, buttons side-by-side
@@ -644,7 +644,7 @@ interface Props {
 const { lang, as = 'image', src, poster } = Astro.props;
 const t = useTranslations(lang);
 
-const defaultImage = '/hero/home-hero.jpg';
+const defaultImage = '/hero/surinametravels-hero-image.jpg';
 const heroSrc = src ?? defaultImage;
 ---
 
@@ -710,7 +710,7 @@ const heroSrc = src ?? defaultImage;
 
 ```bash
 cd ~/projects/surinametravels && npm run build 2>&1 | tail -5
-grep -c '/hero/home-hero.jpg' dist/index.html
+grep -c '/hero/surinametravels-hero-image.jpg' dist/index.html
 grep -c "btn-cinematic" dist/index.html
 grep -c "Echte avonturen" dist/index.html
 grep -c "zonder filters" dist/index.html
@@ -956,7 +956,7 @@ OLD (after Task 3):
 ```astro
     <a href={routeFor(lang, 'home')} class="flex items-center group" aria-label="Suriname Travels — home">
       <img
-        src="/brand/logo-mark.png"
+        src="/brand/suriname-travels-beeldmerk.png"
         alt=""
         aria-hidden="true"
         width="40"
@@ -965,7 +965,7 @@ OLD (after Task 3):
         loading="eager"
       />
       <img
-        src="/brand/logo-suriname-travels.png"
+        src="/brand/surinametravels-logo-transparant.png"
         alt=""
         aria-hidden="true"
         width="220"
@@ -980,7 +980,7 @@ NEW:
 ```astro
     <a href={routeFor(lang, 'home')} class="flex items-center group" aria-label="Suriname Travels — home">
       <img
-        src="/brand/logo-mark.png"
+        src="/brand/suriname-travels-beeldmerk.png"
         alt=""
         aria-hidden="true"
         width="40"
@@ -989,7 +989,7 @@ NEW:
         loading="eager"
       />
       <img
-        src="/brand/logo-suriname-travels.png"
+        src="/brand/surinametravels-logo-transparant.png"
         alt=""
         aria-hidden="true"
         width="220"
@@ -1621,7 +1621,7 @@ NEW:
 ```astro
     <div class="md:col-span-2">
       <img
-        src="/brand/logo-suriname-travels.png"
+        src="/brand/surinametravels-logo-transparant.png"
         alt="Suriname Travels"
         width="240"
         height="60"
@@ -1634,7 +1634,7 @@ NEW:
 
 ```bash
 cd ~/projects/surinametravels && npm run build 2>&1 | tail -5
-grep -c 'logo-suriname-travels' dist/index.html
+grep -c 'surinametravels-logo-transparant' dist/index.html
 ```
 
 Expected: build succeeds; grep returns ≥ 2 (Header + Footer).
@@ -1647,7 +1647,7 @@ git add src/components/Footer.astro
 git commit -m "$(cat <<'EOF'
 Footer: replace placeholder S-circle with real logo
 
-Uses logo-suriname-travels.png with .logo-dark-mode brightness
+Uses surinametravels-logo-transparant.png with .logo-dark-mode brightness
 filter so the dark-green silhouette reads on jungle-900 bg.
 
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
@@ -1931,7 +1931,7 @@ GitHub Actions builds and deploys within ~60 seconds.
 
 ```bash
 sleep 75
-curl -s https://surinametravels.com/ | grep -E "(Echte avonturen|home-hero|logo-suriname-travels)" | wc -l
+curl -s https://surinametravels.com/ | grep -E "(Echte avonturen|surinametravels-hero-image|surinametravels-logo-transparant)" | wc -l
 ```
 
 Expected: ≥ 3 (subtitle, hero image, logo).

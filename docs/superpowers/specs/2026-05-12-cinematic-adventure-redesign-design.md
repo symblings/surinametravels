@@ -223,7 +223,7 @@ De huidige 4 stat-tiles in de hero worden verwijderd. Stats kunnen later in een 
 User levert een eigen foto aan (Suriname kustlijn met palmbomen en historische kanonnen). Verwerkingsregels:
 
 - Donker-groene overlay verhogen t.o.v. de mockup: `linear-gradient(180deg, rgba(15,40,24,0.55) 0%, rgba(15,40,24,0.35) 35%, rgba(15,40,24,0.95) 100%)` (mockup had 0.45/0.15/0.92).
-- Opslagpad: `public/hero/home-hero.jpg`. Astro pakt 'm via `import` voor optimalisatie.
+- Opslagpad: `public/hero/surinametravels-hero-image.jpg`. Astro pakt 'm via `import` voor optimalisatie.
 - Asset wordt **later vervangen door een videofile** (`.mp4` of `.webm`). Het Hero-component moet dus van begin af aan een `as: 'image' | 'video'` prop accepteren zodat de switch geen herbouw is. Default `image`.
 
 ### 11.3 Hero subtitle → "Echte avonturen. Eerlijke partners."
@@ -258,9 +258,9 @@ Logica: één `data-bg="dark"` of `data-bg="light"` op `<body>`. CSS variabelen 
 
 User levert per 2026-05-12:
 
-1. **Logo (full wordmark + mark)** — toucan boven jungle-silhouet, "SURINAME TRAVELS" in dark green + gold caps. Opslagpad: `public/brand/logo-suriname-travels.png` (transparante bg). Wordt in Header gebruikt op alle pagina's.
-2. **Logo (mark only)** — alleen toucan + jungle, geen wordmark. Opslagpad: `public/brand/logo-mark.png` (transparante bg). Reserve voor sociale meta en kleine plekken.
-3. **Favicon** — afgeleid van de mark. Voor nu PNG → later SVG-optimalisatie. Opslagpad: `public/favicon.png` (vervangt huidige favicon.ico/.svg verwijzing in BaseLayout).
+1. **Logo (full wordmark + mark)** — toucan boven jungle-silhouet, "SURINAME TRAVELS" in dark green + gold caps. Opslagpad: `public/brand/surinametravels-logo-transparant.png` (transparante bg). Wordt in Header gebruikt op alle pagina's.
+2. **Logo (mark only)** — alleen toucan + jungle, geen wordmark. Opslagpad: `public/brand/suriname-travels-beeldmerk.png` (transparante bg). Reserve voor sociale meta en kleine plekken.
+3. **Favicon** — afgeleid van de mark. Voor nu PNG → later SVG-optimalisatie. Opslagpad: `public/favicon.jpeg` (vervangt huidige favicon.ico/.svg verwijzing in BaseLayout).
 
 **Logo in Header**:
 - Mobile: alleen mark (~32px hoog), wordmark verbergen
