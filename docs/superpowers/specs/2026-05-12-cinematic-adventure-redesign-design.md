@@ -57,6 +57,9 @@ Bestaande tokens blijven. Toevoegingen:
   --color-clay-400: #D49066;
   --color-clay-600: #B36738;
   /* (--color-clay-500 blijft #C97A4A — basis-button-kleur) */
+
+  /* GEWIJZIGD — sand-kleur shift voor light-mode pagina's (diensten/blog) */
+  --color-sand: #F6F4E8;  /* was #FAF7F0 — past beter bij logo-paletje */
 }
 ```
 
@@ -88,11 +91,11 @@ Op mobiel: hamburger + drawer staat al in `Header.astro` (regel 60-70). Behouden
 
 ### 5.3 `Hero.astro`
 
-**Volledig herschrijven** naar mockup-spec:
+**Volledig herschrijven** naar mockup-spec. Accepteert nieuwe prop `as: 'image' | 'video' = 'image'` zodat later switch naar video een prop-change is, geen herbouw. Bij `video`: `<video autoplay muted loop playsinline>`, dezelfde overlay-stack, `poster` valt terug op het image-pad.
 
 Mobile (default):
 - Full-bleed image, `height: min(70vh, 600px)` (voorkomt dat iPhone SE-gebruikers niets onder de fold zien)
-- Gradient overlay: `linear-gradient(180deg, rgba(15,40,24,0.45) 0%, rgba(15,40,24,0.15) 35%, rgba(15,40,24,0.92) 100%)`
+- Gradient overlay (final values per §11.2): `linear-gradient(180deg, rgba(15,40,24,0.55) 0%, rgba(15,40,24,0.35) 35%, rgba(15,40,24,0.95) 100%)`
 - Content stack onderin: eyebrow → h1 (46px) → subtitle → 2 stacked buttons (full-width, ≥48px tap-target)
 - H1: "Suriname" + line-break + `<em>zonder filters.</em>` (italic, sun-yellow)
 
@@ -209,37 +212,64 @@ Desktop: eyebrow + h2 links, count rechts (flex justify-between, baseline-aligne
 - [ ] Cinematic hero werkt op homepage NL én EN
 - [ ] Bestaande blog-posts renderen zonder layout-breaks
 
-## 11. Open vragen — beslis voor implementatie
+## 11. Beslissingen (eerder open, nu vastgelegd)
 
-### 11.1 Stats-tiles in hero
+### 11.1 Stats-tiles in hero → WEG
 
-De huidige hero heeft 4 stat-tiles (100+ posts, 16 regio's, 20+ partners, een vierde). De mockup verwijdert ze. Wat is gewenst?
+De huidige 4 stat-tiles in de hero worden verwijderd. Stats kunnen later in een aparte sectie terug als dat zinvol blijkt — niet in de hero.
 
-- **A.** Weg laten — schonere hero, stats minder belangrijk.
-- **B.** Onder de hero, eigen strip met dark bg en 4 tegels.
-- **C.** Vereenvoudigen tot 1 regel "+100 verhalen · 16 regio's · 20 partners" inline onder de h1.
+### 11.2 Hero-image → eigen Suriname-foto + donkere overlay, later video
 
-**Default als geen antwoord**: **A** (weg) — past het beste bij outdoor-magazine vibe.
+User levert een eigen foto aan (Suriname kustlijn met palmbomen en historische kanonnen). Verwerkingsregels:
 
-### 11.2 Hero-image keuze
+- Donker-groene overlay verhogen t.o.v. de mockup: `linear-gradient(180deg, rgba(15,40,24,0.55) 0%, rgba(15,40,24,0.35) 35%, rgba(15,40,24,0.95) 100%)` (mockup had 0.45/0.15/0.92).
+- Opslagpad: `public/hero/home-hero.jpg`. Astro pakt 'm via `import` voor optimalisatie.
+- Asset wordt **later vervangen door een videofile** (`.mp4` of `.webm`). Het Hero-component moet dus van begin af aan een `as: 'image' | 'video'` prop accepteren zodat de switch geen herbouw is. Default `image`.
 
-Huidige hero gebruikt 1 Unsplash placeholder. Voor cinematic feel zou een echte Suriname-foto sterker zijn. Heb je een specifieke afbeelding in gedachten, of mag ik een sterkere Unsplash-crop kiezen tot je eigen beeld klaar is?
+### 11.3 Hero subtitle → "Echte avonturen. Eerlijke partners."
 
-**Default**: blijft Unsplash placeholder, maar ik kies een sterker frame (regenwoud canopy of Surinamerivier mist).
+Vastgelegd. NL en EN i18n keys:
+- `hero.subtitle.nl`: `"Echte avonturen. Eerlijke partners."`
+- `hero.subtitle.en`: `"Real adventures. Honest partners."`
 
-### 11.3 Hero subtitle copy
+### 11.4 Dark mode scope → alleen homepage cinematic; diensten + blog krijgen LIGHT-mode met nieuwe sand-kleur
 
-"Geen reisbureau-praat. Echte routes, eerlijke partners." — uit de mockup. Akkoord, of liever je huidige subtitle (`hero.subtitle` i18n key)?
+**Homepage**: cinematic dark hero + dark footer-sectie (zoals mockup).
 
-**Default**: ik schrijf het in de i18n-files en je kunt het later overrulen via translations.
+**Diensten + blog-archive + blog-posts**: light editorial mode. Het bestaande `--color-sand` (`#FAF7F0`) wordt vervangen door **`#F6F4E8`** (iets warmer/papierkleuriger, past beter bij het logo-paletje).
 
-### 11.4 Dark mode systeem-wide?
+Op deze light-pagina's worden de cinematic-keuzes "gespiegeld" (zelfde palette, inverse contrast):
 
-We zetten cinematic-dark op homepage hero + Footer. Maar moet 't ook op `/diensten/`? Op blog-archive? Of alleen homepage?
+| Element | Homepage cinematic | Diensten/blog light |
+|---|---|---|
+| Background | `jungle-900` (#0F2818) | `sand` (#F6F4E8) |
+| Hoofdtekst | white | `ink` (#1A2E1F) |
+| Eyebrows | `leaf-400` (#8FD17B) | `jungle-700` (#1F4D2E) |
+| Accent (italic Fraunces) | `sun-500` (#E8B85C) | `sun-600` (#D49E36) |
+| CTA buttons | `clay-500` (#C97A4A), uppercase, square | `clay-500`, **stays as-is** — clay leest goed op beide bg's |
+| Card-bg | overlay-on-image (geen card-bg) | wit (#FFFFFF) met soft shadow |
+| Card-titles | white | `ink` |
+| Section-headers | white serif | `ink` serif |
+| Footer | jungle-900 | jungle-900 (consistent across site) |
 
-**Default**: cinematic hero alleen op homepage. Blog-archive, diensten, en blog-posts behouden hun licht-met-sand bg (beter leesbaar voor lange tekst).
+Logica: één `data-bg="dark"` of `data-bg="light"` op `<body>`. CSS variabelen schakelen mee.
 
-## 12. Out of scope
+## 12. Brand assets (nieuw)
+
+User levert per 2026-05-12:
+
+1. **Logo (full wordmark + mark)** — toucan boven jungle-silhouet, "SURINAME TRAVELS" in dark green + gold caps. Opslagpad: `public/brand/logo-suriname-travels.png` (transparante bg). Wordt in Header gebruikt op alle pagina's.
+2. **Logo (mark only)** — alleen toucan + jungle, geen wordmark. Opslagpad: `public/brand/logo-mark.png` (transparante bg). Reserve voor sociale meta en kleine plekken.
+3. **Favicon** — afgeleid van de mark. Voor nu PNG → later SVG-optimalisatie. Opslagpad: `public/favicon.png` (vervangt huidige favicon.ico/.svg verwijzing in BaseLayout).
+
+**Logo in Header**:
+- Mobile: alleen mark (~32px hoog), wordmark verbergen
+- Desktop: volledig wordmark (~40px hoog)
+- Op dark-bg pagina's (homepage hero overlap): logo gebruikt dark variant — toucan + dark-green silhouette is al donker-tegen-licht ontworpen, dus we hebben een variant nodig waarin de dark-green bv. naar `sand` of `leaf-400` shift. **Open subkeuze**: krijg ik later een witte/licht-variant van het logo, of moet ik on-the-fly een filter toepassen?
+
+Default voor nu: logo zoals geleverd, maar op cinematic hero komt 'ie pas zichtbaar zodra de header scrollt en jungle-900-bg krijgt. Initial state (over hero): alleen wordmark in wit OF mark-only met aangepast filter.
+
+## 13. Out of scope
 
 - Nieuwe content (blog-posts, regionale gidsen): apart traject
 - Eigen foto's vervangen Unsplash: gebeurt later via content-skill
@@ -248,7 +278,7 @@ We zetten cinematic-dark op homepage hero + Footer. Maar moet 't ook op `/dienst
 - Dark-mode toggle (de cinematic look is geen device-pref dark-mode)
 - Performance-optimalisaties verder dan srcset (bv. WebP-conversie of CDN)
 
-## 13. Geschatte impact
+## 14. Geschatte impact
 
 Bestanden die geraakt worden (geschat 9 files):
 
@@ -266,6 +296,6 @@ src/components/Footer.astro             — dark variant
 
 Niet geraakt: 7 andere components, alle pages, alle content, alle config.
 
-## 14. Open voor herziening
+## 15. Open voor herziening
 
 Dit is een spec, geen plan. Volgende stap na akkoord: `writing-plans` skill maakt een gefaseerd implementatie-plan met testbare checkpoints per component.
