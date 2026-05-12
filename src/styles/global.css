@@ -370,3 +370,11 @@ body[data-bg="light"] {
 .logo-dark-mode {
   filter: brightness(1.5) saturate(1.1);
 }
+
+/* Dark cinematic pages — section h2's use the logo gold for contrast.
+   Skip h2's that already set their own text color via Tailwind (e.g.
+   text-white on dark-gradient sections, text-jungle-900 on bright
+   leaf-bg CTAs) — those keep their explicit color. */
+body[data-bg="dark"] h2:not(.text-white):not(.text-jungle-900):not(.text-ink) {
+  color: var(--color-sun-500);
+}
