@@ -38,10 +38,13 @@ export const ui = {
     'stats.partners': 'Vertrouwde partners',
     'stats.readers': 'Lezers per maand',
 
+    'destinations.eyebrow': 'Bestemmingen',
+    'destinations.count': 'vier regio\'s',
     'destinations.title': 'Populaire bestemmingen',
     'destinations.subtitle': 'Vier plekken die je tijdens je eerste reis door Suriname zou moeten zien.',
     'destinations.viewAll': 'Bekijk alle bestemmingen',
 
+    'featured.eyebrow': 'Recente verhalen',
     'featured.title': 'Recente verhalen',
     'featured.subtitle': 'Verse gidsen, route-tips en achtergrondverhalen uit het binnenland.',
     'featured.viewAll': 'Alle verhalen',
@@ -150,10 +153,13 @@ export const ui = {
     'stats.partners': 'Trusted partners',
     'stats.readers': 'Monthly readers',
 
+    'destinations.eyebrow': 'Destinations',
+    'destinations.count': 'four regions',
     'destinations.title': 'Popular destinations',
     'destinations.subtitle': 'Four places to put on your first trip through Suriname.',
     'destinations.viewAll': 'See all destinations',
 
+    'featured.eyebrow': 'Recent stories',
     'featured.title': 'Recent stories',
     'featured.subtitle': 'Fresh guides, route tips, and background stories from the interior.',
     'featured.viewAll': 'All stories',

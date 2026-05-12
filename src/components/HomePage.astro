@@ -131,59 +131,38 @@ const alternates = [
     </div>
   </section>
 
-  <section class="container-narrow py-12">
-    <div class="rounded-3xl bg-jungle-50 border border-jungle-100 p-8 md:p-10">
-      <p class="text-xs uppercase tracking-widest text-jungle-700 mb-4">{t('stats.eyebrow')}</p>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-        <div>
-          <div class="font-display text-4xl text-ink">100<span class="text-leaf-500">+</span></div>
-          <div class="text-xs uppercase tracking-wide text-ink-soft mt-1">{t('stats.posts')}</div>
-        </div>
-        <div class="md:bg-leaf-500 md:rounded-2xl md:p-5 md:-m-1 md:text-jungle-900">
-          <div class="font-display text-4xl">16</div>
-          <div class="text-xs uppercase tracking-wide mt-1 md:text-jungle-900/80">{t('stats.regions')}</div>
-        </div>
-        <div>
-          <div class="font-display text-4xl text-ink">20<span class="text-leaf-500">+</span></div>
-          <div class="text-xs uppercase tracking-wide text-ink-soft mt-1">{t('stats.partners')}</div>
-        </div>
-        <div>
-          <div class="font-display text-4xl text-ink">12<span class="text-leaf-500">k</span></div>
-          <div class="text-xs uppercase tracking-wide text-ink-soft mt-1">{t('stats.readers')}</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="container-narrow py-16 md:py-20">
-    <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <header class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2 mb-3">
       <div>
-        <h2 class="font-display text-3xl md:text-4xl text-ink">{t('destinations.title')}</h2>
-        <p class="text-ink-soft mt-2 max-w-xl">{t('destinations.subtitle')}</p>
+        <span class="eyebrow text-jungle-700 mb-2 block">— {t('destinations.eyebrow')} —</span>
+        <h2 class="font-display text-3xl md:text-4xl text-ink leading-tight">{t('destinations.title')}</h2>
       </div>
-    </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <span class="eyebrow text-jungle-700/70">04 / {t('destinations.count')}</span>
+    </header>
+    <p class="text-ink-soft mb-8 max-w-xl">{t('destinations.subtitle')}</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
       {destinations.map((d) => <DestinationCard {...d} />)}
     </div>
   </section>
 
   {featured.length > 0 && (
     <section class="container-narrow py-16 md:py-20">
-      <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+      <header class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-3 mb-3">
         <div>
-          <h2 class="font-display text-3xl md:text-4xl text-ink">{t('featured.title')}</h2>
-          <p class="text-ink-soft mt-2 max-w-xl">{t('featured.subtitle')}</p>
+          <span class="eyebrow text-jungle-700 mb-2 block">— {t('featured.eyebrow')} —</span>
+          <h2 class="font-display text-3xl md:text-4xl text-ink leading-tight">{t('featured.title')}</h2>
         </div>
-        <a href={routeFor(lang, 'blog')} class="btn-secondary text-sm" style="padding: 0.625rem 1.25rem;">
+        <a href={routeFor(lang, 'blog')} class="text-sm font-medium text-jungle-700 hover:text-jungle-500 inline-flex items-center gap-1.5 self-start md:self-auto">
           {t('featured.viewAll')}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
           </svg>
         </a>
-      </div>
-      <div class="grid gap-6 md:grid-cols-3">
-        {featured.map((post) => <PostCard post={post} lang={lang} />)}
+      </header>
+      <p class="text-ink-soft mb-8 max-w-xl">{t('featured.subtitle')}</p>
+      <div class="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {featured.map((post) => <PostCard post={post} lang={lang} variant="overlay" />)}
       </div>
     </section>
   )}
