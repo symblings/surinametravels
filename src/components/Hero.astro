@@ -3,70 +3,80 @@ import { useTranslations, routeFor, type Lang } from '@i18n/utils';
 
 interface Props {
   lang: Lang;
+  /** Render an image or an autoplaying video as the hero backdrop. */
+  as?: 'image' | 'video';
+  /** Override the default source path. */
+  src?: string;
+  /** Poster for video mode. Falls back to the default image. */
+  poster?: string;
 }
-const { lang } = Astro.props;
+
+const { lang, as = 'image', src, poster } = Astro.props;
 const t = useTranslations(lang);
 
-const heroImage = 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1800&q=80';
+const defaultImage = '/hero/surinametravels-hero-image.jpg';
+const heroSrc = src ?? defaultImage;
 ---
 
-<section class="relative overflow-hidden bg-jungle-900 text-white">
-  <img
-    src={heroImage}
-    alt=""
-    aria-hidden="true"
-    width="1800"
-    height="1100"
-    class="absolute inset-0 w-full h-full object-cover opacity-55"
-    loading="eager"
-    fetchpriority="high"
-  />
-  <div class="absolute inset-0 bg-gradient-to-br from-jungle-900/80 via-jungle-700/60 to-jungle-900/40"></div>
+<section class="relative overflow-hidden bg-jungle-900 text-white" data-hero>
+  {as === 'image' ? (
+    <img
+      src={heroSrc}
+      alt=""
+      aria-hidden="true"
+      width="1800"
+      height="1100"
+      class="absolute inset-0 w-full h-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+  ) : (
+    <video
+      class="absolute inset-0 w-full h-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+      poster={poster ?? defaultImage}
+    >
+      <source src={heroSrc} type="video/mp4" />
+    </video>
+  )}
 
-  <div class="relative container-narrow pt-24 md:pt-32 pb-20 md:pb-28">
-    <span class="pill bg-leaf-500/20 text-leaf-400 border border-leaf-500/40">
-      {t('hero.eyebrow')}
-    </span>
-    <h1 class="mt-5 font-display text-5xl md:text-6xl lg:text-7xl text-white max-w-3xl leading-[1.05]">
-      {t('hero.title')}
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background: linear-gradient(180deg, rgba(15,40,24,0.55) 0%, rgba(15,40,24,0.35) 35%, rgba(15,40,24,0.95) 100%);"
+  ></div>
+
+  <div
+    class="relative container-narrow flex flex-col justify-end lg:items-center lg:justify-center lg:text-center pt-24 pb-12 lg:py-24"
+    style="min-height: min(70vh, 600px);"
+  >
+    <span class="eyebrow text-leaf-400 mb-4">— {t('hero.eyebrow')} —</span>
+
+    <h1
+      class="font-display font-medium leading-[0.98] tracking-tight text-white max-w-3xl"
+      style="font-size: var(--text-hero);"
+    >
+      {t('hero.title')}<br />
+      <em class="italic" style="color: var(--color-sun-500);">{t('hero.titleAccent')}</em>
     </h1>
-    <p class="mt-5 max-w-2xl text-lg text-jungle-50/90">
+
+    <p class="mt-5 max-w-xl text-[15px] md:text-base text-white/90 leading-relaxed">
       {t('hero.subtitle')}
     </p>
-    <div class="mt-8 flex flex-wrap gap-3">
-      <a href={routeFor(lang, 'blog')} class="btn-primary">
+
+    <div class="mt-8 flex flex-col gap-3 w-full max-w-sm lg:max-w-none lg:flex-row lg:w-auto lg:items-center">
+      <a href={routeFor(lang, 'blog')} class="btn-cinematic">
         {t('hero.cta.primary')}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <line x1="5" y1="12" x2="19" y2="12" />
           <polyline points="12 5 19 12 12 19" />
         </svg>
       </a>
-      <a href={routeFor(lang, 'services')} class="btn-secondary">
+      <a href={routeFor(lang, 'services')} class="btn-cinematic-ghost">
         {t('hero.cta.secondary')}
       </a>
     </div>
-
-    <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="rounded-2xl bg-white/10 backdrop-blur p-4 border border-white/10">
-        <div class="text-2xl font-display text-white">100+</div>
-        <div class="text-xs text-jungle-50/80 uppercase tracking-wide mt-1">{t('stats.posts')}</div>
-      </div>
-      <div class="rounded-2xl bg-leaf-500 p-4">
-        <div class="text-2xl font-display text-jungle-900">16</div>
-        <div class="text-xs text-jungle-900/80 uppercase tracking-wide mt-1">{t('stats.regions')}</div>
-      </div>
-      <div class="rounded-2xl bg-white/10 backdrop-blur p-4 border border-white/10">
-        <div class="text-2xl font-display text-white">20+</div>
-        <div class="text-xs text-jungle-50/80 uppercase tracking-wide mt-1">{t('stats.partners')}</div>
-      </div>
-      <div class="rounded-2xl bg-white/10 backdrop-blur p-4 border border-white/10">
-        <div class="text-2xl font-display text-white">12k</div>
-        <div class="text-xs text-jungle-50/80 uppercase tracking-wide mt-1">{t('stats.readers')}</div>
-      </div>
-    </div>
   </div>
-
-  <svg class="absolute -bottom-px left-0 right-0 w-full h-12 text-sand" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,40 Q300,0 600,40 T1200,40 L1200,60 L0,60 Z" fill="currentColor" />
-  </svg>
 </section>
