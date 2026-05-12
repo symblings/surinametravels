@@ -25,3 +25,4 @@ pnpm-debug.log*
 
 # Claude Code per-machine local settings (skills/memories DO travel via git)
 .claude/settings.local.json
+.superpowers/
