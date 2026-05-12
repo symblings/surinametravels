@@ -12,10 +12,14 @@ const year = new Date().getFullYear();
 <footer class="mt-24 bg-jungle-900 text-jungle-50">
   <div class="container-narrow py-16 grid gap-10 md:grid-cols-4">
     <div class="md:col-span-2">
-      <div class="flex items-center gap-2 mb-3">
-        <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-leaf-500 text-jungle-900 font-display text-lg leading-none">S</span>
-        <span class="font-display text-xl tracking-tight text-white">SurinameTravels</span>
-      </div>
+      <img
+        src="/brand/surinametravels-logo-transparant.png"
+        alt="Suriname Travels"
+        width="240"
+        height="60"
+        class="h-12 w-auto mb-4 logo-dark-mode"
+        loading="lazy"
+      />
       <h2 class="font-display text-lg text-white mb-2">{t('footer.about')}</h2>
       <p class="text-sm text-jungle-100/90 max-w-md">{t('footer.aboutBody')}</p>
     </div>
