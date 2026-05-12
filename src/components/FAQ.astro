@@ -35,10 +35,10 @@ const Heading: 'h2' | 'h3' = level === 3 ? 'h3' : 'h2';
   <div class="divide-y divide-mist border border-mist rounded-3xl bg-white overflow-hidden">
     {
       faqs.map((faq) => (
-        <details class="group">
+        <details class="group group-open:border-l-2 group-open:border-leaf-500 transition-colors">
           <summary class="flex items-center justify-between gap-4 cursor-pointer list-none p-5 md:p-6 hover:bg-jungle-50/40">
             <span class="font-display text-lg text-ink pr-4">{faq.q}</span>
-            <span class="flex-shrink-0 w-7 h-7 rounded-full border border-mist flex items-center justify-center text-jungle-700 group-open:rotate-45 transition-transform">
+            <span class="flex-shrink-0 w-7 h-7 rounded-full border-2 border-leaf-500/40 flex items-center justify-center text-jungle-700 group-open:rotate-45 group-open:border-leaf-500 transition-all">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
