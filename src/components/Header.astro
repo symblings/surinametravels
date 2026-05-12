@@ -29,9 +29,25 @@ function isActive(href: string) {
 
 <header class="sticky top-0 z-40 backdrop-blur bg-sand/85 border-b border-mist">
   <div class="container-narrow flex items-center justify-between py-4">
-    <a href={routeFor(lang, 'home')} class="flex items-center gap-2 group" aria-label="Suriname Travels — home">
-      <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-jungle-700 text-white font-display text-lg leading-none">S</span>
-      <span class="font-display text-xl tracking-tight text-ink">Suriname<span class="text-leaf-600">Travels</span></span>
+    <a href={routeFor(lang, 'home')} class="flex items-center group" aria-label="Suriname Travels — home">
+      <img
+        src="/brand/suriname-travels-beeldmerk.png"
+        alt=""
+        aria-hidden="true"
+        width="40"
+        height="40"
+        class="md:hidden h-9 w-auto"
+        loading="eager"
+      />
+      <img
+        src="/brand/surinametravels-logo-transparant.png"
+        alt=""
+        aria-hidden="true"
+        width="220"
+        height="56"
+        class="hidden md:block h-10 w-auto"
+        loading="eager"
+      />
     </a>
 
     <nav class="hidden md:flex items-center gap-1" aria-label="Primary">
